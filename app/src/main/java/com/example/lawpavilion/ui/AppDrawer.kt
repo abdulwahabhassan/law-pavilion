@@ -46,9 +46,11 @@ fun AppDrawer(
             )
         }
 
-        Spacer(Modifier.width(8.dp))
-
-        LawPavilionLogo(androidx.compose.ui.Modifier.padding(16.dp))
+        //pavilion logo
+        Image(
+            painter = painterResource(R.drawable.ic_law_pavilion),
+            contentDescription = "law pavilion logo"
+        )
 
         DrawerItem(icon = Icons.Filled.Home, label = "", isSelected = false, action = { /*TODO*/ })
         DrawerItem(icon = Icons.Filled.Home, label = "", isSelected = false, action = { /*TODO*/ })
@@ -64,13 +66,6 @@ fun AppDrawer(
 
 }
 
-@Composable
-fun LawPavilionLogo(modifier: Modifier) {
-    Image(
-        painter = painterResource(R.drawable.ic_law_pavilion),
-        contentDescription = "law pavilion logo"
-    )
-}
 
 @Composable
 private fun DrawerItem(
