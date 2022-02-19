@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.lawpavilion.R
 import com.example.lawpavilion.ui.theme.BackgroundNavyBlue
@@ -124,5 +126,24 @@ private fun DrawerItem(
                 )
             }
         }
+    }
+}
+
+
+@Preview(showBackground = true, device = Devices.PIXEL_C)
+@Composable
+fun Preview() {
+    AppDrawer(
+        closeDrawer = { /*TODO*/ },
+        currentRoute = "",
+        navigateToDashBoard = { /*TODO*/ },
+        navigateToLatestJudgements = { /*TODO*/ },
+        navigateToLawReports = { /*TODO*/ },
+        navigateToLawsOfNigeria = { /*TODO*/ },
+        navigateToCPRules = { /*TODO*/ },
+        navigateToIndexAndDigest = { /*TODO*/ },
+        navigateToTextBooksAndJournal = { /*TODO*/ },
+        navigateToResearchFolder = { /*TODO*/ },
+        navigateToWordsInGold = { /*TODO*/ }) {
     }
 }

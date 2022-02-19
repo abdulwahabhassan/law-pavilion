@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
             //retrieve the window size class
             val windowSizeClass = rememberWindowSizeClass()
 
-            LawPavilionApp(windowSizeClass)
+            LawPavilionApp()
         }
     }
 }
@@ -32,7 +32,5 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    LawPavilionTheme {
-
-    }
+    LawPavilionApp()
 }
