@@ -52,14 +52,25 @@ fun AppDrawer(
             contentDescription = "law pavilion logo"
         )
 
+        //dashboard
         DrawerItem(icon = Icons.Filled.Home, label = "", isSelected = false, action = { /*TODO*/ })
+        //latest judgements
         DrawerItem(icon = Icons.Filled.Home, label = "", isSelected = false, action = { /*TODO*/ })
+        //law reports
         DrawerItem(icon = Icons.Filled.Home, label = "", isSelected = false, action = { /*TODO*/ })
+        //laws of nigeria
         DrawerItem(icon = Icons.Filled.Home, label = "", isSelected = false, action = { /*TODO*/ })
+        //cp rules
         DrawerItem(icon = Icons.Filled.Home, label = "", isSelected = false, action = { /*TODO*/ })
+        //index and digest
         DrawerItem(icon = Icons.Filled.Home, label = "", isSelected = false, action = { /*TODO*/ })
+        //text books and journals
         DrawerItem(icon = Icons.Filled.Home, label = "", isSelected = false, action = { /*TODO*/ })
+        //research folder
         DrawerItem(icon = Icons.Filled.Home, label = "", isSelected = false, action = { /*TODO*/ })
+        //words in gold
+        DrawerItem(icon = Icons.Filled.Home, label = "", isSelected = false, action = { /*TODO*/ })
+        //new contents
         DrawerItem(icon = Icons.Filled.Home, label = "", isSelected = false, action = { /*TODO*/ })
 
     }
