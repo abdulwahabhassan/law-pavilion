@@ -37,7 +37,7 @@ fun AppDrawer(
     navigateToWordsInGold: () -> Unit,
     navigateToNewContents: () -> Unit
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(modifier = modifier.width(100.dp)) {
 
         //Drawer Icon
         IconButton(onClick = {}) {
