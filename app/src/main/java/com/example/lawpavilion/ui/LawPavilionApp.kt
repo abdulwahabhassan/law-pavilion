@@ -2,6 +2,7 @@ package com.example.lawpavilion.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -14,10 +15,9 @@ import androidx.compose.ui.Modifier
 import com.example.lawpavilion.R
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Density
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.lawpavilion.ui.theme.*
@@ -107,23 +107,90 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
 
             }
         ) {
-            NavigationRailItem(
-                modifier = Modifier.align(Alignment.Start),
-                selected = false,
-                onClick = { /*TODO*/ },
-                icon = {Icon(imageVector = Icons.Default.Menu, contentDescription = "", tint = Color.Black)},
-                selectedContentColor = Color.Blue,
-                unselectedContentColor = Color.Black)
 
-            NavigationRailItem(
-                modifier = Modifier.align(Alignment.Start),
-                selected = false,
-                onClick = { /*TODO*/ },
-                icon = {Icon(imageVector = Icons.Default.Menu, contentDescription = "", tint = Color.Black)},
-                selectedContentColor = Color.Blue,
-                unselectedContentColor = Color.Black)
+            //keep track of selected rail item
+            var selectedRailId by rememberSaveable{ mutableStateOf(2) }
 
+            //rail items
+            for(railItemId in 0..9) {
+                RailItem(
+                    itemId = railItemId,
+                    isSelected = selectedRailId == railItemId, //toggle isSelected if ids match
+                    onClicked = { selectedRailId = railItemId }, //update selected rail id
+                    drawerExpanded = expanded, //observe drawer state
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .background(
+                            color = if (selectedRailId == railItemId) MaterialTheme.colors.surface
+                            else Color.Transparent,
+                            shape = RectangleShape
+                        ),
+                    drawableId = when (railItemId) {
+                        0 -> R.drawable.ic_dashboard
+                        1 -> R.drawable.ic_latest_judgements
+                        2 -> R.drawable.ic_briefcase
+                        3 -> R.drawable.ic_book_open
+                        4 -> R.drawable.ic_cp_rules
+                        5 -> R.drawable.ic_inbox
+                        6 -> R.drawable.ic_textbooks_journals
+                        7 -> R.drawable.ic_folder
+                        8 -> R.drawable.ic_award
+                        9 -> R.drawable.ic_new_contents
+                        else -> R.drawable.ic_new_contents
+                                                   },
+                    itemTitle = when (railItemId) {
+                        0 -> "Dashboard"
+                        1 -> "Latest Judgements"
+                        2 -> "Law Reports"
+                        3 -> "Laws of Nigeria"
+                        4 -> "Civil Procedure Rules"
+                        5 -> "Index & Digest"
+                        6 -> "TextBooks & Journals"
+                        7 -> "My Research Folder"
+                        8 -> "Words in Gold"
+                        9 -> "New Contents"
+                        else -> ""
+                    }
+                )
+                }
+            }
         }
+    }
 
+@Composable
+fun RailItem(
+    modifier: Modifier = Modifier,
+    itemId: Int, drawableId: Int,
+    isSelected: Boolean = false,
+    itemTitle: String,
+    drawerExpanded: Boolean,
+    onClicked: () -> Unit
+) {
+    Row(
+        modifier
+            .fillMaxWidth()
+            .clickable { onClicked.invoke() }, //make row clickable
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        NavigationRailItem(
+            modifier = modifier,
+            selected = isSelected,
+            onClick = onClicked,
+            icon = {
+                Icon(
+                    painter = painterResource(id = drawableId),
+                    contentDescription = ""
+                )
+                   },
+            selectedContentColor = NavTextHighLightTeal,
+            unselectedContentColor = MaterialTheme.colors.onPrimary
+        )
+
+        //if drawer state is expanded, show item title else empty string
+        Text(
+            text = if (drawerExpanded) itemTitle else "",
+            style = MaterialTheme.typography.body1,
+            color = if (isSelected) NavTextHighLightTeal else MaterialTheme.colors.onPrimary  )
     }
 }
