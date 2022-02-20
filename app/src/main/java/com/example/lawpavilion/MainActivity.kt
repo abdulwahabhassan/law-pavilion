@@ -19,12 +19,10 @@ import com.example.lawpavilion.ui.utils.rememberWindowSizeClass
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             //retrieve the window size class
             val windowSizeClass = rememberWindowSizeClass()
-
-            LawPavilionApp()
+            LawPavilionApp(windowSizeClass)
         }
     }
 }
@@ -32,5 +30,5 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    LawPavilionApp()
+//    LawPavilionApp()
 }

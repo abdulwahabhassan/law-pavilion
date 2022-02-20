@@ -25,29 +25,41 @@ import com.example.lawpavilion.ui.utils.WindowSizeClass
 import com.example.lawpavilion.ui.utils.customShape
 
 @Composable
-fun LawPavilionApp() {
+fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
     LawPavilionTheme {
         val drawerState = rememberDrawerState(DrawerValue.Open)
         var expanded by rememberSaveable{ mutableStateOf(false)}
+//        val left by rememberSaveable{ mutableStateOf(value = when (windowSizeClass) {
+//            WindowSizeClass.COMPACT -> 500f
+//            WindowSizeClass.MEDIUM -> 1000f
+//            WindowSizeClass.EXPANDED -> 1500f
+//        })}
 
         Row(
             Modifier
                 .fillMaxWidth()
                 .background(color = MaterialTheme.colors.primary)
-                .padding(start = if (!expanded) 60.dp else 200.dp)
+                .padding(start = if (!expanded) 60.dp else 250.dp)
         ) {
             Button(
                 colors = ButtonDefaults.buttonColors(backgroundColor = Orange),
                 onClick = { /*TODO*/ }) {
                 Text(text = "History", color = TextWhite)
-                Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = "history button", tint = TextWhite)
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowDown,
+                    contentDescription = "history button",
+                    tint = TextWhite)
             }
 
         }
 
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
             ModalDrawer(
-                drawerShape = customShape(),
+                drawerShape = customShape(left = when (windowSizeClass) {
+                    WindowSizeClass.COMPACT -> 900f
+                    WindowSizeClass.MEDIUM -> 1500f
+                    WindowSizeClass.EXPANDED -> 2100f
+                }),
                 modifier = Modifier.offset(y = 48.dp),
                 drawerState = drawerState,
                 drawerContent = {
@@ -58,7 +70,7 @@ fun LawPavilionApp() {
             ) {
                 Column(
                     modifier = Modifier
-                        .padding(end = if (!expanded) 60.dp else 200.dp)
+                        .padding(end = if (!expanded) 60.dp else 250.dp)
                         .background(color = BodyGrey)
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.End
@@ -71,7 +83,7 @@ fun LawPavilionApp() {
         }
 
         NavigationRail(
-            modifier = if (!expanded) Modifier.width(60.dp) else Modifier.width(200.dp) ,
+            modifier = if (!expanded) Modifier.width(60.dp) else Modifier.width(250.dp) ,
             backgroundColor = MaterialTheme.colors.primary,
             header = {
                 Row(

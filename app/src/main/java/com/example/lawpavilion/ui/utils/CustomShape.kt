@@ -7,13 +7,13 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 
-fun customShape() =  object : Shape {
+fun customShape(left: Float, right: Float = Float.MAX_VALUE, bottom: Float = Float.MAX_VALUE) =  object : Shape {
     override fun createOutline(
         size: Size,
         layoutDirection: LayoutDirection,
         density: Density
     ): Outline {
-        return Outline.Rectangle(Rect(0f,0f,1000f /* width */, 131f /* height */))
+        return Outline.Rectangle(Rect(left,0f,right /* width */, bottom /* height */))
     }
 
 }
