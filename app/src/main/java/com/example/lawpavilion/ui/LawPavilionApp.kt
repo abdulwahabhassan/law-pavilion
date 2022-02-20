@@ -29,11 +29,6 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
     LawPavilionTheme {
         val drawerState = rememberDrawerState(DrawerValue.Open)
         var expanded by rememberSaveable{ mutableStateOf(false)}
-//        val left by rememberSaveable{ mutableStateOf(value = when (windowSizeClass) {
-//            WindowSizeClass.COMPACT -> 500f
-//            WindowSizeClass.MEDIUM -> 1000f
-//            WindowSizeClass.EXPANDED -> 1500f
-//        })}
 
         Row(
             Modifier
@@ -90,7 +85,7 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
                     Modifier
                         .fillMaxWidth()
                         .align(Alignment.Start)
-                        .padding(start = 4.dp, end = 8.dp),
+                        .padding(start = 4.dp, end = 14.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ){
@@ -99,10 +94,12 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
                         Icon(imageVector = Icons.Default.Menu, contentDescription = "", tint = TextWhite)
                     }
 
+                    //law pavilion prime logo
                     Image(
-                        modifier = if (!expanded) Modifier.size(0.dp) else Modifier.size(48.dp),
                         painter = painterResource(id = R.drawable.ic_law_pavilion),
-                        contentDescription = "logo" )
+                        contentDescription = "logo",
+                        alpha = if (expanded) 1f else 0f
+                    )
                 }
 
             }
