@@ -146,6 +146,7 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
                 Row(
                     Modifier
                         .fillMaxWidth()
+                        .height(60.dp)
                         .align(Alignment.Start)
                         .padding(start = 8.dp, end = 14.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
