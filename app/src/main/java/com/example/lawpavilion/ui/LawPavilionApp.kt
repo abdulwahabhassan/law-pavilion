@@ -4,10 +4,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -32,18 +35,77 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
 
         Row(
             Modifier
+                .height(76.dp)
                 .fillMaxWidth()
                 .background(color = MaterialTheme.colors.primary)
-                .padding(start = if (!expanded) 60.dp else 250.dp)
+                .padding(start = if (!expanded) 112.dp else 260.dp),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            var searchText by rememberSaveable{ mutableStateOf("")}
+
+            //search bar
+            TextField(
+                modifier = Modifier
+                    .height(52.dp)
+                    .width(350.dp)
+                    .background(color = NavTextLightPurple, shape = RoundedCornerShape(6.dp)),
+                value = searchText,
+                singleLine = true,
+                onValueChange = { newText ->
+                    searchText = newText
+                },
+                placeholder = {
+                    //search place holder
+                    Text(text = "Search cases and files", color = SearchBarTextLightGrey, style = MaterialTheme.typography.body1)
+                },
+                leadingIcon = {
+                    //magnifying glass search icon
+                    Icon(imageVector = Icons.Default.Search, contentDescription = "", tint = SearchBarTextLightGrey)
+                              },
+                trailingIcon = {
+                    //search button
+                    Button(
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .padding(start = 36.dp, end = 6.dp),
+                        onClick = { /*TODO*/ },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = SearchButtonPurple)
+                    ) {
+                        Text(text = "Search", color = TextWhite, style = MaterialTheme.typography.body1)
+                    }
+                }
+            
+            ) 
+
+            //history button
             Button(
+                modifier = Modifier.padding(16.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Orange),
-                onClick = { /*TODO*/ }) {
+                onClick = {}
+            ) {
                 Text(text = "History", color = TextWhite)
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowDown,
                     contentDescription = "history button",
                     tint = TextWhite)
+            }
+
+            //user avatar
+            Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                IconButton(
+                    modifier = Modifier
+                        .padding(end = 36.dp)
+                        .background(
+                            color = TransparentPurple,
+                            shape = RoundedCornerShape(30.dp)
+                        ),
+                    onClick = {}) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_user_avatar),
+                        contentDescription = "",
+                        tint = BackgroundWhite)
+                }
             }
 
         }
@@ -55,7 +117,7 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
                     WindowSizeClass.MEDIUM -> 1500f
                     WindowSizeClass.EXPANDED -> 2100f
                 }),
-                modifier = Modifier.offset(y = 48.dp),
+                modifier = Modifier.offset(y = 76.dp),
                 drawerState = drawerState,
                 drawerContent = {
                     Row(Modifier.align(Alignment.End)) {
@@ -65,7 +127,7 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
             ) {
                 Column(
                     modifier = Modifier
-                        .padding(end = if (!expanded) 60.dp else 250.dp)
+                        .padding(end = if (!expanded) 76.dp else 230.dp)
                         .background(color = BodyGrey)
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.End
@@ -78,17 +140,18 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
         }
 
         NavigationRail(
-            modifier = if (!expanded) Modifier.width(60.dp) else Modifier.width(250.dp) ,
+            modifier = if (!expanded) Modifier.width(76.dp) else Modifier.width(230.dp) ,
             backgroundColor = MaterialTheme.colors.primary,
             header = {
                 Row(
                     Modifier
                         .fillMaxWidth()
                         .align(Alignment.Start)
-                        .padding(start = 4.dp, end = 14.dp),
+                        .padding(start = 8.dp, end = 14.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ){
+                    //drawer icon button
                     IconButton(
                         onClick = { expanded = !expanded }) {
                         Icon(imageVector = Icons.Default.Menu, contentDescription = "", tint = TextWhite)
@@ -121,7 +184,8 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
                             color = if (selectedRailId == railItemId) MaterialTheme.colors.surface
                             else Color.Transparent,
                             shape = RectangleShape
-                        ),
+                        )
+                        .padding(start = 2.dp),
                     drawableId = when (railItemId) {
                         0 -> R.drawable.ic_dashboard
                         1 -> R.drawable.ic_latest_judgements
