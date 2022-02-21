@@ -19,9 +19,17 @@ private val WorkSans = FontFamily(
 val Typography = Typography(
     defaultFontFamily = WorkSans,
 
+    h2 = TextStyle (
+        fontSize = 16.sp,
+        fontWeight = FontWeight.ExtraBold
+            ),
     h3 = TextStyle(
         fontSize = 20.sp,
         fontWeight = FontWeight.Bold,
+    ),
+    h5 = TextStyle(
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Normal,
     ),
     h4 = TextStyle(
         fontSize = 20.sp,
