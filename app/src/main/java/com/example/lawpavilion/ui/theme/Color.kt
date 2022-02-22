@@ -40,4 +40,5 @@ val BackgroundWhite = Color(0xFFFFFFFF)
 val BodyGrey = Color(0xFFFAFAFA)
 val HeaderTextGrey = Color(0xFF2C404A)
 val DarkRed = Color(0xFF5C1C1C)
+val OutlineGrey = Color(0xFFBBCCD5)
 //#2C404A

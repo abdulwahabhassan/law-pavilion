@@ -158,7 +158,7 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
                                 ) {
                                     Text(text = "Close", style = MaterialTheme.typography.h3)
                                 }
-                                //cas title
+                                //case title
                                 Column(
                                     modifier = when (windowSizeClass) {
                                         WindowSizeClass.COMPACT -> Modifier
@@ -195,11 +195,13 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
                             ) {
                                 Column(
                                     modifier = Modifier
-                                        .width(width = when (windowSizeClass) {
-                                            WindowSizeClass.COMPACT -> 410.dp
-                                            WindowSizeClass.MEDIUM -> 460.dp
-                                            WindowSizeClass.EXPANDED -> 500.dp
-                                        })
+                                        .width(
+                                            width = when (windowSizeClass) {
+                                                WindowSizeClass.COMPACT -> 410.dp
+                                                WindowSizeClass.MEDIUM -> 460.dp
+                                                WindowSizeClass.EXPANDED -> 500.dp
+                                            }
+                                        )
                                         .padding(
                                             start = when (windowSizeClass) {
                                                 WindowSizeClass.COMPACT -> 42.dp
@@ -314,6 +316,59 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
                                                 }
                                             }
                                         )
+                                    }
+
+                                    Spacer(Modifier.height(16.dp))
+
+                                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+
+                                        //track selected button
+                                        var selectedButton by rememberSaveable{ mutableStateOf("summary")}
+
+                                        Row(
+                                            horizontalArrangement = Arrangement.SpaceEvenly,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .align(Alignment.CenterHorizontally)
+                                        ) {
+                                            //view summary
+
+                                            OutlinedButton(
+                                                border = if (selectedButton == "summary")
+                                                    BorderStroke(width = 1.dp, color = OutlineGrey) else
+                                                    BorderStroke(width = 0.5.dp, color = OutlineGrey),
+                                                colors = ButtonDefaults.buttonColors(
+                                                    backgroundColor = BackgroundWhite,
+                                                    contentColor = BackgroundNavyBlue
+
+                                                ), onClick = { selectedButton = "summary" }) {
+
+                                                Text(
+                                                    modifier = Modifier.padding(6.dp),
+                                                    text = "View Summary",
+                                                    fontWeight = FontWeight.Bold
+                                                )
+
+                                            }
+
+                                            //read full judgement
+                                            OutlinedButton(
+                                                border = if (selectedButton == "full")
+                                                    BorderStroke(width = 1.dp, color = OutlineGrey) else
+                                                    BorderStroke(width = 1.dp, color = Orange),
+                                                colors = ButtonDefaults.buttonColors(
+                                                    backgroundColor = Orange,
+                                                    contentColor = TextWhite
+
+                                                ), onClick = { selectedButton = "full" }) {
+
+                                                Text(
+                                                    modifier = Modifier.padding(6.dp),
+                                                    text = "Read Full Judgement",
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                            }
+                                        }
                                     }
 
                                 }
