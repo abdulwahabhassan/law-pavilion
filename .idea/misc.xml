@@ -3,7 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/drawable/ic_user_avatar.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_cp_rules.xml" value="0.115" />
+        <entry key="app/src/main/res/drawable/ic_latest_judgements.xml" value="0.115" />
+        <entry key="app/src/main/res/drawable/ic_law_pavilion.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_menu.xml" value="0.115" />
+        <entry key="app/src/main/res/drawable/ic_new_contents.xml" value="0.115" />
+        <entry key="app/src/main/res/drawable/ic_pavilion_logo.xml" value="0.115" />
       </map>
     </option>
   </component>

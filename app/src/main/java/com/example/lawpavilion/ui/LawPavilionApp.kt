@@ -1,17 +1,16 @@
 package com.example.lawpavilion.ui
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -19,7 +18,6 @@ import androidx.compose.ui.Modifier
 import com.example.lawpavilion.R
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -30,10 +28,13 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.lawpavilion.models.Folder
 import com.example.lawpavilion.ui.theme.*
+import com.example.lawpavilion.ui.utils.Database
 import com.example.lawpavilion.ui.utils.WindowSizeClass
 import com.example.lawpavilion.ui.utils.customShape
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
     LawPavilionTheme {
@@ -53,6 +54,7 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
 
             //search bar
             TextField(
+                colors =  TextFieldDefaults.textFieldColors(textColor = TextWhite),
                 modifier = Modifier
                     .height(52.dp)
                     .width(350.dp)
@@ -125,7 +127,9 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
                     WindowSizeClass.MEDIUM -> 1500f
                     WindowSizeClass.EXPANDED -> 2100f
                 }),
-                modifier = Modifier.offset(y = 76.dp),
+                modifier = Modifier
+                    .offset(y = 76.dp)
+                    .padding(bottom = 76.dp),
                 drawerState = drawerState,
                 drawerContent = {
 
@@ -195,6 +199,10 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
                             ) {
                                 Column(
                                     modifier = Modifier
+                                        .verticalScroll(
+                                            state = rememberScrollState(),
+                                            enabled = true
+                                        )
                                         .width(
                                             width = when (windowSizeClass) {
                                                 WindowSizeClass.COMPACT -> 410.dp
@@ -383,7 +391,7 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
             ) {
                 Column(
                     modifier = Modifier
-                        .padding(28.dp)
+                        .padding(start = 10.dp, end = 28.dp, top = 32.dp, bottom = 32.dp)
                         .padding(end = if (!expanded) 76.dp else 230.dp)
                         .background(color = BodyGrey)
                         .fillMaxWidth(),
@@ -399,16 +407,20 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
                         style = MaterialTheme.typography.h4
                     )
 
-                    Row(Modifier.padding(top = 32.dp)) {
+                    Row(Modifier.padding(top = 32.dp, bottom = 16.dp)) {
                         //supreme court text button
                         TextButton(
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = if (selectedCourt == "Supreme Court")
+                                    BackgroundWhite else BodyGrey),
                             onClick = { selectedCourt = "Supreme Court" },
                             border = if (selectedCourt == "Supreme Court")
                                 BorderStroke(1.dp, BodyTextGrey)
                             else
                                 null
                         ) {
-                            Text(text = "Supreme Court",
+                            Text(
+                                text = "Supreme Court",
                                 color = BodyTextGrey,
                                 style = MaterialTheme.typography.h5)
                         }
@@ -417,18 +429,121 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
 
                         //court of appeal text button
                         TextButton(
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = if (selectedCourt == "Court of Appeal")
+                                BackgroundWhite else BodyGrey),
                             onClick = { selectedCourt = "Court of Appeal" },
                             border = if (selectedCourt == "Court of Appeal")
                                 BorderStroke(1.dp, BodyTextGrey)
                             else
                                 null
                         ) {
-                            Text(text = "Court of Appeal",
+                            Text(
+                                text = "Court of Appeal",
                                 color = BodyTextGrey,
                                 style = MaterialTheme.typography.h5)
                         }
 
                     }
+                    val folders by rememberSaveable {
+                        mutableStateOf(Database.getListOfCaseFolders())
+                    }
+
+                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+
+                        //folders
+                        LazyVerticalGrid(
+                            cells = GridCells.Adaptive(minSize = 230.dp),
+                            contentPadding = PaddingValues(top = 16.dp)
+                        ) {
+                            items(folders) { folder ->
+
+                                Box(
+                                    modifier = Modifier
+                                        .wrapContentWidth()
+                                        .width(230.dp)
+                                        .padding(end = 16.dp, top = 8.dp, bottom = 16.dp),
+                                    contentAlignment = Alignment.CenterStart
+
+                                ) {
+                                    Image(
+                                        modifier = Modifier,
+                                        painter = painterResource(
+                                            id = R.drawable.ic_case_folder
+                                        ),
+                                        contentDescription = "folder"
+                                    )
+
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp),
+                                        verticalArrangement = Arrangement.Center,
+                                        horizontalAlignment = Alignment.Start
+                                    ) {
+
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ) {
+
+                                            //date
+                                            Text(
+                                                text = folder.date,
+                                                fontSize = 10.sp
+                                            )
+
+                                            //pavilion logo
+                                            Image(
+                                                modifier = Modifier.requiredSize(32.dp),
+                                                painter = painterResource(
+                                                    id = R.drawable.ic_pavilion_logo
+                                                ),
+                                                contentDescription = "pavilion logo"
+                                            )
+
+                                        }
+
+                                        Spacer(modifier = Modifier.height(12.dp))
+
+                                        //title
+                                        Text(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            text = buildAnnotatedString {
+                                                append(folder.title.split("v.")[0])
+                                                append("v.")
+                                                withStyle(
+                                                    style = SpanStyle(
+                                                        fontSize = 16.sp,
+                                                        fontWeight = FontWeight.ExtraBold
+                                                    )
+                                                ) {
+                                                    append(folder.title.split("v.")[1])
+                                                }
+                                            },
+                                            textAlign = TextAlign.Start,
+                                        )
+
+                                        Spacer(modifier = Modifier.height(24.dp))
+
+                                        //code
+                                        Text(
+                                            text = folder.code,
+                                            textAlign = TextAlign.Start,
+                                            fontSize = 12.sp
+                                        )
+                                    }
+                                }
+
+
+
+                            }
+                        }
+                    }
+
+
+
                 }
 
             }
@@ -514,6 +629,11 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
             }
         }
     }
+
+@Composable
+fun Folder(folder: Folder) {
+    TODO("Not yet implemented")
+}
 
 @Composable
 fun RailItem(
