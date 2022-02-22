@@ -209,17 +209,19 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
                                         ),
                                     horizontalAlignment = Alignment.End
                                 ) {
-                                    //header
-                                    Text(
-                                        text = "Principle",
-                                        style = MaterialTheme.typography.h3,
-                                        color = BackgroundNavyBlue
-                                    )
 
-                                    Spacer(Modifier.height(16.dp))
 
                                     //case code
                                     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                                        //header
+                                        Text(
+                                            text = "Principle",
+                                            style = MaterialTheme.typography.h3,
+                                            color = BackgroundNavyBlue
+                                        )
+
+                                        Spacer(Modifier.height(16.dp))
+
                                         TextButton(
                                             onClick = { /*TODO*/ },
                                             modifier = Modifier.background(
@@ -228,7 +230,6 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
                                         )
                                         ) {
                                             Text(
-                                                textAlign = TextAlign.End,
                                                 text = "(2020) LPELR-50514(CA)",
                                                 style = MaterialTheme.typography.h5,
                                                 color = TextGreen,
@@ -242,7 +243,6 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
                                         //body
                                         Text(
                                             lineHeight = 20.sp,
-                                            textAlign = TextAlign.Start,
                                             style = MaterialTheme.typography.body1,
                                             color = BackgroundNavyBlue,
                                             text = buildAnnotatedString {
@@ -323,10 +323,6 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
                     }
 
                     }
-//                    //alter layout direction
-//                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-//
-//                    }
 
                 }
             ) {
