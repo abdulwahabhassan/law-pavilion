@@ -33,10 +33,11 @@ import com.example.lawpavilion.ui.theme.*
 import com.example.lawpavilion.ui.utils.Database
 import com.example.lawpavilion.ui.utils.WindowSizeClass
 import com.example.lawpavilion.ui.utils.customShape
+import com.example.lawpavilion.viewmodel.MainActivityViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
+fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: MainActivityViewModel) {
     LawPavilionTheme {
         val drawerState = rememberDrawerState(DrawerValue.Open)
         var expanded by rememberSaveable{ mutableStateOf(false)}
@@ -150,7 +151,7 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
 
                                 ) {
 
-                                //close buttton
+                                //close button
                                 Button(
                                     onClick = { /*TODO*/ },
                                     modifier = Modifier.padding(start = when (windowSizeClass) {
@@ -445,9 +446,13 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
                         }
 
                     }
-                    val folders by rememberSaveable {
-                        mutableStateOf(Database.getListOfCaseFolders())
-                    }
+//                    val folders by rememberSaveable {
+//                        mutableStateOf(Database.getListOfCaseFolders())
+//                    }
+                    //collect folders as state, every time state changes as a result of
+                    //new folder(s) being added or deleted, recomposition ensues on every
+                    //composable that uses this folders
+                    val folders by mainActivityViewModel.folders.collectAsState()
 
                     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
 

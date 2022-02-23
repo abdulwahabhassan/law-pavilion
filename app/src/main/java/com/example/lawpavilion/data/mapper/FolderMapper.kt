@@ -4,8 +4,9 @@ import com.example.lawpavilion.data.database.entity.FolderLocal
 import com.example.lawpavilion.domain.BaseMapper
 import com.example.lawpavilion.domain.model.Folder
 import com.example.lawpavilion.domain.model.Judgement
+import javax.inject.Inject
 
-class FolderMapper (
+class FolderMapper @Inject constructor(
     private val judgementMapper: JudgementMapper
         ) : BaseMapper<FolderLocal, Folder> {
     override fun mapToEntity(type: FolderLocal): Folder {

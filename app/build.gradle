@@ -19,6 +19,7 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
     }
 
     buildTypes {
@@ -76,11 +77,15 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     //timber
+    //retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation 'com.jakewharton.timber:timber:5.0.1'
     //moshi
     implementation "com.squareup.moshi:moshi-kotlin:$moshi"
     implementation "com.squareup.retrofit2:converter-moshi:$moshiConverter"
+    //gson
+    implementation "com.google.code.gson:gson:2.8.9"
     //retrofit/gson
-    //implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
 }

@@ -19,6 +19,10 @@ class MainActivityViewModel @Inject constructor(
     private val saveFolderUseCase: SaveFolderUseCase
 ) : ViewModel() {
 
+    init {
+        loadLatestJudgementsFolders()
+    }
+
     class SearchData(
         val folders: List<Folder> = emptyList(),
         val judgement: Judgement? = folders.getOrNull(0)?.judgement
@@ -60,7 +64,7 @@ class MainActivityViewModel @Inject constructor(
     }
 
     fun searchLatestJudgements(keyWord: String) {
-//        //
+        //Todo
     }
 
 }

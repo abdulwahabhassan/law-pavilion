@@ -1,7 +1,7 @@
 package com.example.lawpavilion.domain.model
 
 data class Judgement(
-    val code: String? = null,
+    val code: String,
     val title: String? = null,
     val type: String? = null,
     val intro: String? = null,

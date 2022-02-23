@@ -4,11 +4,12 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+@Entity
 data class JudgementLocal(
-    val code: String,
-    val title: String,
-    val type: String,
-    val intro: String,
-    val text: String,
-    val extra: String
+    @PrimaryKey val code: String = "DEF101",
+    @ColumnInfo val title: String?,
+    @ColumnInfo val type: String?,
+    @ColumnInfo val intro: String?,
+    @ColumnInfo val text: String?,
+    @ColumnInfo val extra: String?
 )
