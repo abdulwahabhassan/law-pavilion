@@ -1,26 +1,26 @@
 package com.example.lawpavilion.ui.utils
 
-import com.example.lawpavilion.models.Folder
+import com.example.lawpavilion.data.database.entity.FolderLocal
 
 object Database {
-    fun getListOfCaseFolders(): List<Folder> {
+    fun getListOfCaseFolders(): List<FolderLocal> {
         return listOf(
-            Folder(),
-            Folder(),
-            Folder(),
-            Folder(),
-            Folder(),
-            Folder(),
-            Folder(),
-            Folder(),
-            Folder(),
-            Folder(),
-            Folder(),
-            Folder(),
-            Folder(),
-            Folder(),
-            Folder(),
-            Folder()
+            FolderLocal(),
+            FolderLocal(),
+            FolderLocal(),
+            FolderLocal(),
+            FolderLocal(),
+            FolderLocal(),
+            FolderLocal(),
+            FolderLocal(),
+            FolderLocal(),
+            FolderLocal(),
+            FolderLocal(),
+            FolderLocal(),
+            FolderLocal(),
+            FolderLocal(),
+            FolderLocal(),
+            FolderLocal()
         )
     }
 }

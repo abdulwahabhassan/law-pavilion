@@ -28,7 +28,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.lawpavilion.models.Folder
+import com.example.lawpavilion.data.database.entity.FolderLocal
 import com.example.lawpavilion.ui.theme.*
 import com.example.lawpavilion.ui.utils.Database
 import com.example.lawpavilion.ui.utils.WindowSizeClass
@@ -631,7 +631,7 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass) {
     }
 
 @Composable
-fun Folder(folder: Folder) {
+fun Folder(folder: FolderLocal) {
     TODO("Not yet implemented")
 }
 
