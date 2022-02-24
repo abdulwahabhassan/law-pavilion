@@ -1,4 +1,4 @@
-package com.example.lawpavilion.worker
+package com.example.lawpavilion.data.worker
 
 import android.content.Context
 import androidx.work.CoroutineWorker
@@ -11,10 +11,8 @@ import kotlinx.coroutines.withContext
 import com.google.gson.Gson
 import com.google.gson.stream.JsonReader
 import timber.log.Timber
-import javax.inject.Inject
 
-class DatabaseWorker @Inject constructor(
-    private val appDatabase: AppDatabase,
+class DatabaseWorker (
     context: Context,
     workerParams: WorkerParameters
 ) : CoroutineWorker(context, workerParams) {
@@ -27,8 +25,11 @@ class DatabaseWorker @Inject constructor(
                         val folderType = object : TypeToken<List<FolderLocal>>() {}.type
                         val folders: List<FolderLocal> = Gson().fromJson(jsonReader, folderType)
 
-                        appDatabase.folderLocalDao().insertAllFolders(folders)
+                        Timber.d("folders $folders")
 
+                        val database = AppDatabase.getInstance(applicationContext)
+                        database.folderLocalDao().insertAllFolders(folders)
+                        Timber.d("Success database - all set in database")
                         Result.success()
                     }
                 }

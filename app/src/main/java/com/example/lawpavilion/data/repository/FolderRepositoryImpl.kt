@@ -7,6 +7,8 @@ import com.example.lawpavilion.data.database.entity.FolderLocal
 import com.example.lawpavilion.data.mapper.FolderMapper
 import com.example.lawpavilion.domain.model.Folder
 import com.example.lawpavilion.domain.repository.FolderRepository
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
 import timber.log.Timber
 import java.lang.Exception
 import javax.inject.Inject
@@ -17,27 +19,16 @@ class FolderRepositoryImpl @Inject constructor(
 ): FolderRepository {
     override suspend fun retrieveFolders(): Result<List<Folder>> {
         return try {
-            Result.Success(
-                folderMapper.mapToEntitiesList(
-                    folderLocalDao.getAllFolders()
-                )
+
+            Result.Success(folderMapper.mapToEntitiesList(
+                folderLocalDao.getAllFolders())
             )
+
         } catch(e: Exception) {
             Timber.d(e.localizedMessage)
             Result.Error(e)
         }
 
-    }
-
-    override suspend fun saveFolder(folderLocal: FolderLocal): Result<Long> {
-        return try {
-            Result.Success(
-                folderLocalDao.insertFolder(folderLocal)
-            )
-        } catch(e: Exception) {
-            Timber.d(e.localizedMessage)
-            Result.Error(e)
-        }
     }
 
     override suspend fun retrieveFolder(folderCode: String): Result<Folder> {

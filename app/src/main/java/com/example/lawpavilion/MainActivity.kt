@@ -17,15 +17,20 @@ import com.example.lawpavilion.ui.theme.LawPavilionTheme
 import com.example.lawpavilion.ui.utils.WindowSizeClass
 import com.example.lawpavilion.ui.utils.rememberWindowSizeClass
 import com.example.lawpavilion.viewmodel.MainActivityViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //get view model
+        val mainActivityViewModel: MainActivityViewModel by viewModels()
+
         setContent {
             //retrieve the window size class
             val windowSizeClass = rememberWindowSizeClass()
-            //get view model
-            val mainActivityViewModel: MainActivityViewModel by viewModels()
+
             //compose app, pass window size class and class activity
             LawPavilionApp(windowSizeClass, mainActivityViewModel)
         }
