@@ -5,8 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.lawpavilion.ui.LawPavilionApp
 import com.example.lawpavilion.ui.utils.WindowSizeClass
@@ -26,20 +24,20 @@ class MainActivity : ComponentActivity() {
             //retrieve the window size class
             val windowSizeClass = rememberWindowSizeClass()
             //keep track of drawer state based on window's size
-            val drawerState = if (windowSizeClass ==  WindowSizeClass.COMPACT) {
+            val drawerState = if (windowSizeClass ==  WindowSizeClass.COMPACTPORTRAIT) {
                 rememberDrawerState(DrawerValue.Closed)
             } else {
                 rememberDrawerState(DrawerValue.Open)
             }
             //keep track of rail size
-            val railSizeIfSmallScreen = if (windowSizeClass == WindowSizeClass.COMPACT ||
+            val railSizeIfSmallScreen = if (windowSizeClass == WindowSizeClass.COMPACTPORTRAIT ||
                 windowSizeClass == WindowSizeClass.MEDIUMPORTRAIT ) {
                 76.dp
             } else {
                 230.dp
             }
 
-            val railSizeIfLargeScreen = if (windowSizeClass !== WindowSizeClass.COMPACT ||
+            val railSizeIfLargeScreen = if (windowSizeClass !== WindowSizeClass.COMPACTPORTRAIT ||
                 windowSizeClass !== WindowSizeClass.MEDIUMPORTRAIT ) {
                 230.dp
             } else {

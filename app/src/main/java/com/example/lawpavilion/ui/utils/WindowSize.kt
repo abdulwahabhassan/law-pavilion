@@ -12,7 +12,8 @@ import androidx.compose.ui.unit.dp
 import androidx.window.layout.WindowMetricsCalculator
 
 enum class WindowSizeClass {
-    COMPACT,
+    COMPACTLAND,
+    COMPACTPORTRAIT,
     MEDIUMLAND,
     MEDIUMPORTRAIT,
     EXPANDEDLAND,
@@ -32,15 +33,9 @@ fun Activity.rememberWindowSizeClass(): WindowSizeClass {
         windowMetrics.bounds.toComposeRect().size.toDpSize()
     }
 
-//    val widthWindowSizeClass = when {
-//        windowDpSize.width < 600.dp -> WindowSizeClass.COMPACT
-//        windowDpSize.width < 840.dp -> WindowSizeClass.MEDIUM
-//        else -> WindowSizeClass.EXPANDED
-//    }
-//    return widthWindowSizeClass
     if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
         val widthWindowSizeClass = when {
-            windowDpSize.width < 600.dp -> WindowSizeClass.COMPACT
+            windowDpSize.width < 600.dp -> WindowSizeClass.COMPACTLAND
             windowDpSize.width < 840.dp -> WindowSizeClass.MEDIUMLAND
             windowDpSize.width < 1300.dp -> WindowSizeClass.EXPANDEDLAND
             else -> WindowSizeClass.EXTRALAND
@@ -48,7 +43,7 @@ fun Activity.rememberWindowSizeClass(): WindowSizeClass {
         return widthWindowSizeClass
     } else {
         val widthWindowSizeClass = when {
-            windowDpSize.width < 600.dp -> WindowSizeClass.COMPACT
+            windowDpSize.width < 600.dp -> WindowSizeClass.COMPACTPORTRAIT
             windowDpSize.width < 840.dp -> WindowSizeClass.MEDIUMPORTRAIT
             windowDpSize.width < 960.dp -> WindowSizeClass.EXPANDEDPORTRAIT
             else -> WindowSizeClass.EXTRAPORTRAIT

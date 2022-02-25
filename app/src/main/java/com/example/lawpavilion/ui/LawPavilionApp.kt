@@ -158,7 +158,8 @@ fun LawPavilionApp(
                         .height(52.dp)
                         .width(
                             width = when (windowSizeClass) { //adjust search bar width
-                                WindowSizeClass.COMPACT -> 250.dp
+                                WindowSizeClass.COMPACTLAND -> 250.dp
+                                WindowSizeClass.COMPACTPORTRAIT -> 250.dp
                                 WindowSizeClass.MEDIUMLAND -> 350.dp //done
                                 WindowSizeClass.MEDIUMPORTRAIT -> 250.dp //done
                                 WindowSizeClass.EXPANDEDLAND -> 350.dp //done
@@ -196,34 +197,37 @@ fun LawPavilionApp(
 
                 )
 
-                //history button
-                Button(
-                    modifier = Modifier.padding(16.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Orange),
-                    onClick = {  }
-                ) {
-                    Text(text = "History", color = TextWhite)
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowDown,
-                        contentDescription = "history button",
-                        tint = TextWhite)
-                }
-
-                //user avatar
-                Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-                    IconButton(
-                        modifier = Modifier
-                            .padding(end = 36.dp)
-                            .background(
-                                color = TransparentPurple,
-                                shape = RoundedCornerShape(30.dp)
-                            ),
-                        onClick = {}) {
+                if (windowSizeClass == WindowSizeClass.COMPACTPORTRAIT) {} else {
+                    //history button
+                    Button(
+                        modifier = Modifier.padding(16.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Orange),
+                        onClick = {  }
+                    ) {
+                        Text(text = "History", color = TextWhite)
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_user_avatar),
-                            contentDescription = "",
-                            tint = BackgroundWhite)
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = "history button",
+                            tint = TextWhite)
                     }
+
+                    //user avatar
+                    Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                        IconButton(
+                            modifier = Modifier
+                                .padding(end = 36.dp)
+                                .background(
+                                    color = TransparentPurple,
+                                    shape = RoundedCornerShape(30.dp)
+                                ),
+                            onClick = {}) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_user_avatar),
+                                contentDescription = "",
+                                tint = BackgroundWhite)
+                        }
+                    }
+
                 }
 
             }
@@ -232,7 +236,8 @@ fun LawPavilionApp(
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                 ModalDrawer(
                     drawerShape = customShape(left = when (windowSizeClass) {
-                        WindowSizeClass.COMPACT -> 600f
+                        WindowSizeClass.COMPACTLAND -> 550f
+                        WindowSizeClass.COMPACTPORTRAIT -> 130f
                         WindowSizeClass.MEDIUMLAND -> 550f //done
                         WindowSizeClass.MEDIUMPORTRAIT -> 200f //done
                         WindowSizeClass.EXPANDEDLAND -> 1500f //done
@@ -247,16 +252,7 @@ fun LawPavilionApp(
                     drawerContent = {
 
                         //drawer content
-                        Column(modifier = when (windowSizeClass) {
-                            WindowSizeClass.COMPACT -> Modifier.offset((0.dp))
-                            WindowSizeClass.MEDIUMLAND -> Modifier.offset((0.dp)) //done
-                            WindowSizeClass.MEDIUMPORTRAIT -> Modifier.offset((0.dp)) //done
-                            WindowSizeClass.EXPANDEDLAND -> Modifier.offset((0.dp)) //done
-                            WindowSizeClass.EXPANDEDPORTRAIT -> Modifier.offset((0.dp)) //done
-                            WindowSizeClass.EXTRALAND -> Modifier.offset((0.dp))
-                            WindowSizeClass.EXTRAPORTRAIT -> Modifier.offset((0.dp))
-
-                        }) {
+                        Column(modifier = Modifier.offset((0.dp))) {
                             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                                 //case details view header
                                 Row(
@@ -271,7 +267,8 @@ fun LawPavilionApp(
                                     Row(modifier = Modifier
                                         .width(
                                             width = when (windowSizeClass) {
-                                                WindowSizeClass.COMPACT -> 370.dp
+                                                WindowSizeClass.COMPACTLAND -> 390.dp
+                                                WindowSizeClass.COMPACTPORTRAIT -> 300.dp
                                                 WindowSizeClass.MEDIUMLAND -> 390.dp //done
                                                 WindowSizeClass.MEDIUMPORTRAIT -> 320.dp //done
                                                 WindowSizeClass.EXPANDEDLAND -> 460.dp //done
@@ -282,7 +279,8 @@ fun LawPavilionApp(
                                         )
                                         .padding(
                                             end = when (windowSizeClass) {
-                                                WindowSizeClass.COMPACT -> 1.dp
+                                                WindowSizeClass.COMPACTLAND -> 8.dp
+                                                WindowSizeClass.COMPACTPORTRAIT -> 1.dp
                                                 WindowSizeClass.MEDIUMLAND -> 8.dp //done
                                                 WindowSizeClass.MEDIUMPORTRAIT -> 8.dp
                                                 WindowSizeClass.EXPANDEDLAND -> 72.dp //done
@@ -305,7 +303,8 @@ fun LawPavilionApp(
                                         //case title
                                         Column(
                                             modifier = when (windowSizeClass) {
-                                                WindowSizeClass.COMPACT -> Modifier
+                                                WindowSizeClass.COMPACTLAND -> Modifier.offset(x = 12.dp)
+                                                WindowSizeClass.COMPACTPORTRAIT -> Modifier.offset(x = 12.dp)
                                                 WindowSizeClass.MEDIUMLAND -> Modifier.offset(x = 12.dp) //done
                                                 WindowSizeClass.MEDIUMPORTRAIT -> Modifier.offset(x = 12.dp) //done
                                                 WindowSizeClass.EXPANDEDLAND -> Modifier.offset(x = 60.dp) //done
@@ -349,7 +348,8 @@ fun LawPavilionApp(
                                             )
                                             .width(
                                                 width = when (windowSizeClass) {
-                                                    WindowSizeClass.COMPACT -> 410.dp
+                                                    WindowSizeClass.COMPACTLAND -> 400.dp
+                                                    WindowSizeClass.COMPACTPORTRAIT -> 305.dp
                                                     WindowSizeClass.MEDIUMLAND -> 400.dp
                                                     WindowSizeClass.MEDIUMPORTRAIT -> 330.dp //done
                                                     WindowSizeClass.EXPANDEDLAND -> 457.dp //done
@@ -360,7 +360,8 @@ fun LawPavilionApp(
                                             )
                                             .padding(
                                                 start = when (windowSizeClass) {
-                                                    WindowSizeClass.COMPACT -> 42.dp
+                                                    WindowSizeClass.COMPACTLAND -> 16.dp
+                                                    WindowSizeClass.COMPACTPORTRAIT -> 16.dp
                                                     WindowSizeClass.MEDIUMLAND -> 16.dp
                                                     WindowSizeClass.MEDIUMPORTRAIT -> 16.dp
                                                     WindowSizeClass.EXPANDEDLAND -> 20.dp
@@ -474,7 +475,10 @@ fun LawPavilionApp(
 
                                                 //view summary
                                                 OutlinedButton(
-                                                    modifier = Modifier.fillMaxWidth(0.5f),
+                                                    modifier = if (windowSizeClass == WindowSizeClass.COMPACTPORTRAIT)
+                                                        Modifier
+                                                    else
+                                                        Modifier.fillMaxWidth(0.5f),
                                                     border = if (selectedButton == "summary")
                                                         BorderStroke(width = 1.dp, color = OutlineGrey) else
                                                         BorderStroke(width = 0.5.dp, color = OutlineGrey),
@@ -496,7 +500,10 @@ fun LawPavilionApp(
 
                                                 //read full judgement
                                                 OutlinedButton(
-                                                    modifier = Modifier.fillMaxWidth(1f),
+                                                    modifier = if (windowSizeClass == WindowSizeClass.COMPACTPORTRAIT)
+                                                        Modifier
+                                                    else
+                                                        Modifier.fillMaxWidth(1f),
                                                     border = if (selectedButton == "full")
                                                         BorderStroke(width = 1.dp, color = OutlineGrey) else
                                                         BorderStroke(width = 1.dp, color = Orange),
@@ -509,7 +516,8 @@ fun LawPavilionApp(
                                                     Text(
                                                         modifier = Modifier.padding(6.dp),
                                                         text = when (windowSizeClass) {
-                                                            WindowSizeClass.COMPACT -> "Read Full Judgement"
+                                                            WindowSizeClass.COMPACTLAND -> "Read Full"
+                                                            WindowSizeClass.COMPACTPORTRAIT -> "Read Full"
                                                             WindowSizeClass.MEDIUMLAND -> "Read Full"
                                                             WindowSizeClass.MEDIUMPORTRAIT -> "Read Full"
                                                             WindowSizeClass.EXPANDEDLAND -> "Read Full Judgement"
@@ -726,7 +734,7 @@ fun LawPavilionApp(
                 header = {
                     //show or hide drawer icon depending on screen size
                     when (windowSizeClass) {
-                        WindowSizeClass.COMPACT -> { Box(modifier = Modifier.size(60.dp)) }
+                        WindowSizeClass.COMPACTPORTRAIT -> { Box(modifier = Modifier.size(60.dp)) }
                         WindowSizeClass.MEDIUMLAND -> NavRailHeader(expanded) { expanded = !expanded }
                         WindowSizeClass.MEDIUMPORTRAIT -> { Box(modifier = Modifier.size(60.dp)) }
                         WindowSizeClass.EXPANDEDLAND -> NavRailHeader(expanded) { expanded = !expanded }
