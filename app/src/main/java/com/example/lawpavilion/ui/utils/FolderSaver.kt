@@ -27,14 +27,14 @@ val FolderSaver = run {
         ) },
         restore = {
             Folder(
-                it[titleKey] as String,
-                it[dateKey] as String,
-                it[codeKey] as String,
-                it[typeKey] as String,
-                it[introKey] as String,
-                it[topicKey] as String,
-                it[textKey] as String,
-                it[extraKey] as String
+                it[titleKey] as String?,
+                it[dateKey] as String?,
+                it[codeKey] as String?,
+                it[typeKey] as String?,
+                it[introKey] as String?,
+                it[topicKey] as String?,
+                it[textKey] as String?,
+                it[extraKey] as String?
         ) }
     )
 }

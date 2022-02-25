@@ -3,20 +3,23 @@ package com.example.lawpavilion.ui.utils
 
 import android.app.Activity
 import android.content.res.Configuration
-import android.graphics.drawable.GradientDrawable
-import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.toComposeRect
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowMetricsCalculator
 
-enum class WindowSizeClass { COMPACT, MEDIUM, EXPANDED }
+enum class WindowSizeClass {
+    COMPACT,
+    MEDIUMLAND,
+    MEDIUMPORTRAIT,
+    EXPANDEDLAND,
+    EXPANDEDPORTRAIT,
+    EXTRALAND,
+    EXTRAPORTRAIT
+}
 
 @Composable
 fun Activity.rememberWindowSizeClass(): WindowSizeClass {
@@ -29,26 +32,28 @@ fun Activity.rememberWindowSizeClass(): WindowSizeClass {
         windowMetrics.bounds.toComposeRect().size.toDpSize()
     }
 
-    val widthWindowSizeClass = when {
-        windowDpSize.width < 1000.dp -> WindowSizeClass.COMPACT
-        windowDpSize.width < 1400.dp -> WindowSizeClass.MEDIUM
-        else -> WindowSizeClass.EXPANDED
-    }
-    return widthWindowSizeClass
-//    if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//        val widthWindowSizeClass = when {
-//            windowDpSize.width < 600.dp -> WindowSizeClass.EXPANDED
-//            windowDpSize.width < 840.dp -> WindowSizeClass.MEDIUM
-//            else -> WindowSizeClass.COMPACT
-//        }
-//        return widthWindowSizeClass
-//    } else {
-//        val widthWindowSizeClass = when {
-//            windowDpSize.width < 600.dp -> WindowSizeClass.COMPACT
-//            windowDpSize.width < 840.dp -> WindowSizeClass.MEDIUM
-//            else -> WindowSizeClass.EXPANDED
-//        }
-//        return widthWindowSizeClass
+//    val widthWindowSizeClass = when {
+//        windowDpSize.width < 600.dp -> WindowSizeClass.COMPACT
+//        windowDpSize.width < 840.dp -> WindowSizeClass.MEDIUM
+//        else -> WindowSizeClass.EXPANDED
 //    }
+//    return widthWindowSizeClass
+    if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        val widthWindowSizeClass = when {
+            windowDpSize.width < 600.dp -> WindowSizeClass.COMPACT
+            windowDpSize.width < 840.dp -> WindowSizeClass.MEDIUMLAND
+            windowDpSize.width < 1300.dp -> WindowSizeClass.EXPANDEDLAND
+            else -> WindowSizeClass.EXTRALAND
+        }
+        return widthWindowSizeClass
+    } else {
+        val widthWindowSizeClass = when {
+            windowDpSize.width < 600.dp -> WindowSizeClass.COMPACT
+            windowDpSize.width < 840.dp -> WindowSizeClass.MEDIUMPORTRAIT
+            windowDpSize.width < 960.dp -> WindowSizeClass.EXPANDEDPORTRAIT
+            else -> WindowSizeClass.EXTRAPORTRAIT
+        }
+        return widthWindowSizeClass
+    }
 
 }

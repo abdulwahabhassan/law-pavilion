@@ -1,6 +1,7 @@
 package com.example.lawpavilion.ui
 
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -10,9 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -21,13 +20,13 @@ import com.example.lawpavilion.R
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,19 +41,52 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: MainActivityViewModel) {
+fun LawPavilionApp(
+    windowSizeClass: WindowSizeClass,
+    drawerState: DrawerState,
+    railSizeIfSmallScreen: Dp,
+    railSizeIfLargeScreen: Dp,
+    mainActivityViewModel: MainActivityViewModel
+) {
     LawPavilionTheme {
+        //keep track of notification count
+        var notificationCount by rememberSaveable { mutableStateOf(2) }
+
+        //keep track of navigation rail state
+        var expanded by rememberSaveable{ mutableStateOf(false)}
+        //reusable coroutine scope
+        val coroutineScope = rememberCoroutineScope()
+
+        //collect folders as state, every time state changes as a result of
+        //new folder(s) being added or deleted, recomposition ensues on every
+        //composable that uses this folders
+        val folders by mainActivityViewModel.folders.collectAsState()
+        //keep track of selected folder
+        var selectedFolder by rememberSaveable(stateSaver = FolderSaver) {
+            mutableStateOf(Folder())
+        }
+
         Scaffold(
+            modifier = Modifier.background(color = BodyGrey),
             //floating action button
-            floatingActionButton = {
+            floatingActionButton = { if (drawerState.isClosed)
                 FloatingActionButton(
-                    modifier = Modifier.padding(
-                        horizontal = 16.dp,
-                        vertical = 24.dp
-                    ).background(color = Color.White, shape = RoundedCornerShape(50.dp)),
+                    modifier = Modifier
+                        .padding(
+                            horizontal = 16.dp,
+                            vertical = 24.dp
+                        )
+                        .background(color = Color.Transparent, shape = RoundedCornerShape(50.dp)),
                     backgroundColor = Color.Transparent,
-                    onClick = { /*TODO*/ }
+                    elevation =  FloatingActionButtonDefaults.elevation(
+                        defaultElevation = 0.dp,
+                        hoveredElevation = 0.dp,
+                        pressedElevation = 2.dp,
+                        focusedElevation = 0.dp
+                    ),
+                    onClick = { notificationCount += 1 }
                 ) {
+
                     Column(Modifier.padding(20.dp)) {
                         Box(
                             contentAlignment = Alignment.Center,
@@ -66,7 +98,8 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: Main
                                 .size(65.dp)) {
                             Icon(
                                 painter = painterResource(id = R.drawable.notification),
-                                contentDescription = ""
+                                contentDescription = "",
+                                tint = Color.White
                             )
                             Box(
                                 Modifier
@@ -86,38 +119,33 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: Main
                                         .background(
                                             shape = RoundedCornerShape(50.dp),
                                             color = Color.White
-                                        ).size(24.dp)
+                                        )
+                                        .size(24.dp)
                                 ){
-                                    Text(modifier = Modifier.align(Alignment.Center), text = "2", color = Orange)
+                                    Text(
+                                        modifier = Modifier.align(Alignment.Center),
+                                        text = "$notificationCount",
+                                        color = Orange)
                                 }
                             }
                         }
                     }
 
-
-        }}) {
-            //keep track of drawer state
-            var drawerState = rememberDrawerState(DrawerValue.Open)
-            //keep track of navigation rail state
-            var expanded by rememberSaveable{ mutableStateOf(false)}
-            //reusable coroutine scope
-            val coroutineScope = rememberCoroutineScope()
-
-            //collect folders as state, every time state changes as a result of
-            //new folder(s) being added or deleted, recomposition ensues on every
-            //composable that uses this folders
-            val folders by mainActivityViewModel.folders.collectAsState()
-            //keep track of selected folder
-            var selectedFolder by rememberSaveable(stateSaver = FolderSaver) {
-                mutableStateOf(Folder())
-            }
+        } else {}
+            }) {
 
             Row(
                 Modifier
                     .height(76.dp)
                     .fillMaxWidth()
                     .background(color = MaterialTheme.colors.primary)
-                    .padding(start = if (!expanded) 112.dp else 260.dp),
+
+                    .padding(start = if (expanded && railSizeIfSmallScreen == 230.dp) {
+                        if (railSizeIfLargeScreen == 230.dp) 260.dp else 112.dp
+                    }
+                    else {
+                        112.dp
+                    }),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -128,7 +156,17 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: Main
                     colors =  TextFieldDefaults.textFieldColors(textColor = TextWhite),
                     modifier = Modifier
                         .height(52.dp)
-                        .width(350.dp)
+                        .width(
+                            width = when (windowSizeClass) { //adjust search bar width
+                                WindowSizeClass.COMPACT -> 250.dp
+                                WindowSizeClass.MEDIUMLAND -> 350.dp //done
+                                WindowSizeClass.MEDIUMPORTRAIT -> 250.dp //done
+                                WindowSizeClass.EXPANDEDLAND -> 350.dp //done
+                                WindowSizeClass.EXPANDEDPORTRAIT -> 350.dp //done
+                                WindowSizeClass.EXTRALAND -> 450.dp
+                                WindowSizeClass.EXTRAPORTRAIT -> 450.dp
+                            }
+                        )
                         .background(color = NavTextLightPurple, shape = RoundedCornerShape(6.dp)),
                     value = searchText,
                     singleLine = true,
@@ -194,9 +232,13 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: Main
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                 ModalDrawer(
                     drawerShape = customShape(left = when (windowSizeClass) {
-                        WindowSizeClass.COMPACT -> 900f
-                        WindowSizeClass.MEDIUM -> 1500f
-                        WindowSizeClass.EXPANDED -> 2100f
+                        WindowSizeClass.COMPACT -> 600f
+                        WindowSizeClass.MEDIUMLAND -> 550f //done
+                        WindowSizeClass.MEDIUMPORTRAIT -> 200f //done
+                        WindowSizeClass.EXPANDEDLAND -> 1500f //done
+                        WindowSizeClass.EXPANDEDPORTRAIT -> 850f //done
+                        WindowSizeClass.EXTRALAND -> 1750f //done
+                        WindowSizeClass.EXTRAPORTRAIT -> 720f
                     }),
                     modifier = Modifier
                         .offset(y = 76.dp)
@@ -206,9 +248,14 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: Main
 
                         //drawer content
                         Column(modifier = when (windowSizeClass) {
-                            WindowSizeClass.COMPACT -> Modifier.offset(-(25.dp))
-                            WindowSizeClass.MEDIUM -> Modifier.offset((0.dp))
-                            WindowSizeClass.EXPANDED -> Modifier.offset((25.dp))
+                            WindowSizeClass.COMPACT -> Modifier.offset((0.dp))
+                            WindowSizeClass.MEDIUMLAND -> Modifier.offset((0.dp)) //done
+                            WindowSizeClass.MEDIUMPORTRAIT -> Modifier.offset((0.dp)) //done
+                            WindowSizeClass.EXPANDEDLAND -> Modifier.offset((0.dp)) //done
+                            WindowSizeClass.EXPANDEDPORTRAIT -> Modifier.offset((0.dp)) //done
+                            WindowSizeClass.EXTRALAND -> Modifier.offset((0.dp))
+                            WindowSizeClass.EXTRAPORTRAIT -> Modifier.offset((0.dp))
+
                         }) {
                             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                                 //case details view header
@@ -224,17 +271,25 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: Main
                                     Row(modifier = Modifier
                                         .width(
                                             width = when (windowSizeClass) {
-                                                WindowSizeClass.COMPACT -> 410.dp
-                                                WindowSizeClass.MEDIUM -> 460.dp
-                                                WindowSizeClass.EXPANDED -> 500.dp
+                                                WindowSizeClass.COMPACT -> 370.dp
+                                                WindowSizeClass.MEDIUMLAND -> 390.dp //done
+                                                WindowSizeClass.MEDIUMPORTRAIT -> 320.dp //done
+                                                WindowSizeClass.EXPANDEDLAND -> 460.dp //done
+                                                WindowSizeClass.EXPANDEDPORTRAIT -> 400.dp //done
+                                                WindowSizeClass.EXTRALAND -> 460.dp
+                                                WindowSizeClass.EXTRAPORTRAIT -> 390.dp
                                             }
                                         )
                                         .padding(
                                             end = when (windowSizeClass) {
-                                                WindowSizeClass.COMPACT -> 8.dp
-                                                WindowSizeClass.MEDIUM -> 72.dp
-                                                WindowSizeClass.EXPANDED -> 5.dp
-                                            }, top = 8.dp, bottom = 16.dp, start = 42.dp
+                                                WindowSizeClass.COMPACT -> 1.dp
+                                                WindowSizeClass.MEDIUMLAND -> 8.dp //done
+                                                WindowSizeClass.MEDIUMPORTRAIT -> 8.dp
+                                                WindowSizeClass.EXPANDEDLAND -> 72.dp //done
+                                                WindowSizeClass.EXPANDEDPORTRAIT -> 65.dp //done
+                                                WindowSizeClass.EXTRALAND -> 72.dp
+                                                WindowSizeClass.EXTRAPORTRAIT -> 8.dp
+                                            }, top = 12.dp, bottom = 16.dp, start = 20.dp
                                         ),
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                         verticalAlignment = Alignment.CenterVertically
@@ -251,8 +306,12 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: Main
                                         Column(
                                             modifier = when (windowSizeClass) {
                                                 WindowSizeClass.COMPACT -> Modifier
-                                                WindowSizeClass.MEDIUM -> Modifier.offset(x = 68.dp)
-                                                WindowSizeClass.EXPANDED -> Modifier.offset(x = 124.dp)
+                                                WindowSizeClass.MEDIUMLAND -> Modifier.offset(x = 12.dp) //done
+                                                WindowSizeClass.MEDIUMPORTRAIT -> Modifier.offset(x = 12.dp) //done
+                                                WindowSizeClass.EXPANDEDLAND -> Modifier.offset(x = 60.dp) //done
+                                                WindowSizeClass.EXPANDEDPORTRAIT -> Modifier.offset(x = 60.dp) //done
+                                                WindowSizeClass.EXTRALAND -> Modifier.offset(x = 60.dp) //done
+                                                WindowSizeClass.EXTRAPORTRAIT -> Modifier.offset(x = 12.dp)
                                             },
                                             horizontalAlignment = Alignment.End
                                         ) {
@@ -291,15 +350,23 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: Main
                                             .width(
                                                 width = when (windowSizeClass) {
                                                     WindowSizeClass.COMPACT -> 410.dp
-                                                    WindowSizeClass.MEDIUM -> 460.dp
-                                                    WindowSizeClass.EXPANDED -> 500.dp
+                                                    WindowSizeClass.MEDIUMLAND -> 400.dp
+                                                    WindowSizeClass.MEDIUMPORTRAIT -> 330.dp //done
+                                                    WindowSizeClass.EXPANDEDLAND -> 457.dp //done
+                                                    WindowSizeClass.EXPANDEDPORTRAIT -> 400.dp //done
+                                                    WindowSizeClass.EXTRALAND -> 457.dp
+                                                    WindowSizeClass.EXTRAPORTRAIT -> 400.dp
                                                 }
                                             )
                                             .padding(
                                                 start = when (windowSizeClass) {
                                                     WindowSizeClass.COMPACT -> 42.dp
-                                                    WindowSizeClass.MEDIUM -> 16.dp
-                                                    WindowSizeClass.EXPANDED -> 8.dp
+                                                    WindowSizeClass.MEDIUMLAND -> 16.dp
+                                                    WindowSizeClass.MEDIUMPORTRAIT -> 16.dp
+                                                    WindowSizeClass.EXPANDEDLAND -> 20.dp
+                                                    WindowSizeClass.EXPANDEDPORTRAIT -> 20.dp
+                                                    WindowSizeClass.EXTRALAND -> 20.dp
+                                                    WindowSizeClass.EXTRAPORTRAIT -> 16.dp
                                                 }, top = 32.dp, bottom = 32.dp, end = 8.dp
                                             ),
                                         horizontalAlignment = Alignment.End
@@ -399,7 +466,7 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: Main
                                             var selectedButton by rememberSaveable{ mutableStateOf("summary")}
 
                                             Row(
-                                                horizontalArrangement = Arrangement.SpaceEvenly,
+                                                horizontalArrangement = Arrangement.SpaceBetween,
                                                 modifier = Modifier
                                                     .fillMaxWidth()
                                                     .align(Alignment.CenterHorizontally)
@@ -407,6 +474,7 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: Main
 
                                                 //view summary
                                                 OutlinedButton(
+                                                    modifier = Modifier.fillMaxWidth(0.5f),
                                                     border = if (selectedButton == "summary")
                                                         BorderStroke(width = 1.dp, color = OutlineGrey) else
                                                         BorderStroke(width = 0.5.dp, color = OutlineGrey),
@@ -424,8 +492,11 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: Main
 
                                                 }
 
+                                                Spacer(modifier = Modifier.width(24.dp))
+
                                                 //read full judgement
                                                 OutlinedButton(
+                                                    modifier = Modifier.fillMaxWidth(1f),
                                                     border = if (selectedButton == "full")
                                                         BorderStroke(width = 1.dp, color = OutlineGrey) else
                                                         BorderStroke(width = 1.dp, color = Orange),
@@ -437,7 +508,15 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: Main
 
                                                     Text(
                                                         modifier = Modifier.padding(6.dp),
-                                                        text = "Read Full Judgement",
+                                                        text = when (windowSizeClass) {
+                                                            WindowSizeClass.COMPACT -> "Read Full Judgement"
+                                                            WindowSizeClass.MEDIUMLAND -> "Read Full"
+                                                            WindowSizeClass.MEDIUMPORTRAIT -> "Read Full"
+                                                            WindowSizeClass.EXPANDEDLAND -> "Read Full Judgement"
+                                                            WindowSizeClass.EXPANDEDPORTRAIT -> "Read Full"
+                                                            WindowSizeClass.EXTRALAND -> "Read Full Judgement"
+                                                            WindowSizeClass.EXTRAPORTRAIT -> "Read Full Judgement"
+                                                        },
                                                         fontWeight = FontWeight.Bold
                                                     )
                                                 }
@@ -454,9 +533,15 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: Main
                 ) {
                     Column(
                         modifier = Modifier
-                            .padding(start = 10.dp, end = 28.dp, top = 32.dp, bottom = 32.dp)
-                            .padding(end = if (!expanded) 76.dp else 230.dp)
-                            .background(color = BodyGrey)
+                            .padding(start = 10.dp, end = 28.dp, top = 32.dp)
+                            .padding(
+                                end = if (expanded && railSizeIfSmallScreen == 230.dp) {
+                                    if (railSizeIfLargeScreen == 230.dp) 230.dp else 76.dp
+                                }
+                                else {
+                                    76.dp
+                                }
+                            )
                             .fillMaxWidth(),
                         horizontalAlignment = Alignment.End
                     ) {
@@ -529,9 +614,10 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: Main
 
                                     ) {
                                         Image(
-                                            modifier = Modifier,
                                             painter = painterResource(
-                                                id = R.drawable.ic_case_folder
+                                                id = if (selectedFolder == folder) R.drawable.ic_folder_orange
+                                                else
+                                                    R.drawable.ic_case_folder
                                             ),
                                             contentDescription = "folder"
                                         )
@@ -542,7 +628,11 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: Main
                                                     color = Color.Transparent,
                                                     shape = RoundedCornerShape(12.dp)
                                                 )
-                                                .clickable {
+                                                .clickable(
+                                                    //disable ripple effect
+                                                    interactionSource = remember { MutableInteractionSource() },
+                                                    indication = null
+                                                ) {
 
                                                     //set selected folder
                                                     selectedFolder = folder
@@ -629,30 +719,20 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: Main
             }
 
             NavigationRail(
-                modifier = if (!expanded) Modifier.width(76.dp) else Modifier.width(230.dp) ,
+                modifier = Modifier.width(width = if (!expanded) 76.dp else railSizeIfSmallScreen),
                 backgroundColor = MaterialTheme.colors.primary,
-                header = {
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .height(60.dp)
-                            .align(Alignment.Start)
-                            .padding(start = 8.dp, end = 14.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        //drawer icon button
-                        IconButton(
-                            onClick = { expanded = !expanded }) {
-                            Icon(imageVector = Icons.Default.Menu, contentDescription = "", tint = TextWhite)
-                        }
 
-                        //law pavilion prime logo
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_law_pavilion),
-                            contentDescription = "logo",
-                            alpha = if (expanded) 1f else 0f
-                        )
+                //navigation rail header
+                header = {
+                    //show or hide drawer icon depending on screen size
+                    when (windowSizeClass) {
+                        WindowSizeClass.COMPACT -> { Box(modifier = Modifier.size(60.dp)) }
+                        WindowSizeClass.MEDIUMLAND -> NavRailHeader(expanded) { expanded = !expanded }
+                        WindowSizeClass.MEDIUMPORTRAIT -> { Box(modifier = Modifier.size(60.dp)) }
+                        WindowSizeClass.EXPANDEDLAND -> NavRailHeader(expanded) { expanded = !expanded }
+                        WindowSizeClass.EXPANDEDPORTRAIT -> NavRailHeader(expanded) { expanded = !expanded }
+                        WindowSizeClass.EXTRAPORTRAIT -> NavRailHeader(expanded) { expanded = !expanded }
+                        WindowSizeClass.EXTRALAND -> NavRailHeader(expanded) { expanded = !expanded }
                     }
 
                 }
@@ -664,6 +744,7 @@ fun LawPavilionApp(windowSizeClass: WindowSizeClass, mainActivityViewModel: Main
                 //rail items
                 for(railItemId in 0..9) {
                     RailItem(
+                        railSize = railSizeIfSmallScreen,
                         itemId = railItemId,
                         isSelected = selectedRailId == railItemId, //toggle isSelected if ids match
                         onClicked = { selectedRailId = railItemId }, //update selected rail id
@@ -717,6 +798,7 @@ fun Folder(folder: FolderLocal) {
 @Composable
 fun RailItem(
     modifier: Modifier = Modifier,
+    railSize: Dp,
     itemId: Int, drawableId: Int,
     isSelected: Boolean = false,
     itemTitle: String,
@@ -746,8 +828,37 @@ fun RailItem(
 
         //if drawer state is expanded, show item title else empty string
         Text(
-            text = if (drawerExpanded) itemTitle else "",
+            text = if (drawerExpanded && railSize == 230.dp) itemTitle else "",
             style = MaterialTheme.typography.body1,
             color = if (isSelected) NavTextHighLightTeal else MaterialTheme.colors.onPrimary  )
     }
+}
+
+@Composable
+fun NavRailHeader(expanded: Boolean, toggleExpandedState: () -> Unit) {
+    Column( Modifier.fillMaxWidth()) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .height(60.dp)
+                .align(Alignment.Start)
+                .padding(start = 8.dp, end = 14.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            //drawer icon button
+            IconButton(
+                onClick = { toggleExpandedState.invoke() }) {
+                Icon(imageVector = Icons.Default.Menu, contentDescription = "", tint = TextWhite)
+            }
+
+            //law pavilion prime logo
+            Image(
+                painter = painterResource(id = R.drawable.ic_law_pavilion),
+                contentDescription = "logo",
+                alpha = if (expanded) 1f else 0f
+            )
+        }
+    }
+
 }
