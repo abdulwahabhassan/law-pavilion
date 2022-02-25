@@ -1,5 +1,8 @@
 # law-pavilion
 
+|            |            |            |            |
+|------------|------------|------------|------------|
+| ![Screenshot one](extra_land_rail_drawer_open.png) | ![Screenshot two](extra_portrait.png) | ![Screenshot three](extra_land_default.png) | ![Screenshot four](extra_rail_drawer_open.png) |
 
 # technologies used
 Hilt - for dependency injection
