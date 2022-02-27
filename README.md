@@ -1,5 +1,7 @@
 # law-pavilion
 
+The first time you launch the app, you won't see any folder. But at this momemt, room has created a database and populated it with the content of data.json found in the assets folder. When you relaunch the app, you should be able to see some folders now as well as their details in the drawer when you click on any one.
+
 |            |            |            |            |
 |------------|------------|------------|------------|
 | ![one](main-one.png) | ![two](main-two.png) | ![three](main-three.png) | ![four](main-four.png) |
