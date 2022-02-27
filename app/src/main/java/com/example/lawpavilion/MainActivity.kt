@@ -7,7 +7,7 @@ import androidx.activity.viewModels
 import androidx.compose.material.*
 import androidx.compose.ui.unit.dp
 import com.example.lawpavilion.ui.LawPavilionApp
-import com.example.lawpavilion.ui.utils.WindowSizeClass
+import com.example.lawpavilion.ui.utils.SizeClass
 import com.example.lawpavilion.ui.utils.rememberWindowSizeClass
 import com.example.lawpavilion.viewmodel.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,21 +24,26 @@ class MainActivity : ComponentActivity() {
             //retrieve the window size class
             val windowSizeClass = rememberWindowSizeClass()
             //keep track of drawer state based on window's size
-            val drawerState = if (windowSizeClass ==  WindowSizeClass.COMPACTPORTRAIT) {
+            val drawerState = if (windowSizeClass ==  SizeClass.FOURHUNDRED ||
+                windowSizeClass ==  SizeClass.FIVEHUNDRED ||
+                windowSizeClass ==  SizeClass.SIXHUNDRED
+                    ) {
                 rememberDrawerState(DrawerValue.Closed)
             } else {
                 rememberDrawerState(DrawerValue.Open)
             }
             //keep track of rail size
-            val railSizeIfSmallScreen = if (windowSizeClass == WindowSizeClass.COMPACTPORTRAIT ||
-                windowSizeClass == WindowSizeClass.MEDIUMPORTRAIT ) {
+            val railSizeIfSmallScreen = if (windowSizeClass ==  SizeClass.FOURHUNDRED ||
+                windowSizeClass ==  SizeClass.FIVEHUNDRED ||
+                windowSizeClass ==  SizeClass.SIXHUNDRED ) {
                 76.dp
             } else {
                 230.dp
             }
 
-            val railSizeIfLargeScreen = if (windowSizeClass !== WindowSizeClass.COMPACTPORTRAIT ||
-                windowSizeClass !== WindowSizeClass.MEDIUMPORTRAIT ) {
+            val railSizeIfLargeScreen = if (windowSizeClass !== SizeClass.FOURHUNDRED ||
+                windowSizeClass !==  SizeClass.FIVEHUNDRED ||
+                windowSizeClass !==  SizeClass.SIXHUNDRED ) {
                 230.dp
             } else {
                 76.dp

@@ -6,20 +6,6 @@ val Purple200 = Color(0xFFBB86FC)
 val Purple500 = Color(0xFF6200EE)
 val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
-//#FF9700 Orange
-//#222753 NavyBlue
-//#8379EE SearchButtonPurple
-//#5065A5 TransparentPurple
-//#F2F2F2 LightGrey
-//#00BCCA NavTextHighLightTeal
-//#747898 NavTextLightPurple
-//#202020 BodyTextBlack
-//#9BAAB2 BodyTextGrey
-//#ECECEC SearchBarTextLightGrey
-//#72B17A TextGreen
-//#E8F7EC TransparentGreen
-//#D40000 ButtonRed
-//#FFFFFF TextWhite
 val Orange = Color(0xFFFF9700)
 val BackgroundNavyBlue = Color(0xFF222753)
 val BackgroundNavyBlueVariant = Color(0xFF262C60)

@@ -13,7 +13,7 @@ fun customShape(left: Float, right: Float = Float.MAX_VALUE, bottom: Float = Flo
         layoutDirection: LayoutDirection,
         density: Density
     ): Outline {
-        return Outline.Rectangle(Rect(left,0f,right /* width */, bottom /* height */))
+        return Outline.Rectangle(Rect(left,0f,right, bottom))
     }
 
 }
